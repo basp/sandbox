@@ -7,10 +7,12 @@ import Decimal from 'break_infinity.js';
 // * energy anomaliess upon evolve
 // * energy anomaly gain % boost by achievements
 // * vaporwave
+// * cats (cursors?)
 
 class Dimension {
   public number = new Decimal(0);
   public numberBought = 0;
+  public level = 0;
 
   constructor(
     public tier: number,
@@ -52,8 +54,8 @@ class Dimension {
   }
 
   production(): Decimal {
-    return this.baseProduction.mul(
-      new Decimal(2).pow(this.power()));
+    let base = this.baseProduction.plus(this.level * 0.5);
+    return base.mul(new Decimal(2).pow(this.power()));
   }
 
   isBuyEnabled(state: State): boolean {
@@ -145,8 +147,8 @@ const tickspeed = 1000;
 const rate = 10;
 const interval = 1000 / rate;
 
-const baseTarget = new Decimal(1e5);
-const targetMultiplier = new Decimal(1e9);
+const baseTarget = new Decimal(1e4);
+const targetMultiplier = new Decimal(1e6);
 
 const SAVE_FILE = 'sandbox.save';
 
@@ -202,11 +204,12 @@ export class AppComponent {
     this.state = new State();
     this.state.level = level + 1;
     for(let dim of this.state.dimensions) {
-      if (!dim.isVisible(this.state)) {
+      if(dim.requiredLevel >= this.state.level) {
         continue;
       }
 
-      dim.baseProduction = new Decimal(1 + this.state.level * 0.5);
+      let gain = this.state.level - dim.requiredLevel;
+      dim.baseProduction = dim.baseProduction.plus(gain * 0.5);
     }
   }
 
