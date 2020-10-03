@@ -70,6 +70,7 @@ class State {
   public energy = new Decimal(10);
   public output = new Decimal(0);
   public interval = new Decimal(1000);
+  public level = 0;
   public dimensions = [
     new Dimension(
       0,
@@ -126,7 +127,9 @@ const refspeed = 1000;
 const tickspeed = 1000;
 const rate = 10;
 const interval = 1000 / rate;
-const target = new Decimal(1e50);
+
+const baseTarget = new Decimal(1e40);
+const targetMultiplier = new Decimal(1e6);
 
 @Component({
   selector: 'app-root',
@@ -137,13 +140,26 @@ export class AppComponent {
   title = 'Sandbox';
   state = new State();
 
+  evolve(): void {
+    const level = this.state.level;
+    this.state = new State();
+    this.state.level = level + 1;
+    for(let dim of this.state.dimensions) {
+      dim.baseProduction = new Decimal(1 + this.state.level * 0.5);
+    }
+  }
+
+  target(): Decimal {
+    return baseTarget.mul(targetMultiplier.pow(this.state.level));
+  }
+
   progress(): number {
     if (this.state.output.lessThanOrEqualTo(0)) {
       return 0;
     }
 
     let e = this.state.energy.plus(1).log10();
-    let t = target.plus(1).log10();
+    let t = this.target().plus(1).log10();
     return Math.min(e / t * 100, 100);
   }
 

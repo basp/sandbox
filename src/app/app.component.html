@@ -16,12 +16,24 @@
       {{progress().toFixed(1)}}%
     </div>
   </div>
+  <div *ngIf="progress() >= 100">
+    <button
+    type="button"
+    class="btn btn-primary btn-block"
+    (click)="evolve()">
+    Evolve
+    </button>
+  </div>
+  <div *ngIf="progress() < 100">
+    Next evolutionary algorithm is available at <code>{{target() | formatCost}}</code> energy.
+  </div>
+  <hr/>
   <div class="row align-items-center" *ngFor="let dim of dimensions()">
     <div class="col-sm pt-1" style="font-family: 'Secular One', sans-serif; font-size: 1.1em">
       {{dim.name}}
     </div>
     <div class="col-sm pt-1 text-right">
-      {{dim.number | formatNumber }}
+      {{dim.number | formatNumber}}
     </div>
     <div class="col-sm pt-1 text-right">
       x{{dim.production() | formatProduction}}
