@@ -71,38 +71,6 @@ function formatBignumber(value: Decimal): string {
   return `${mantissa.toFixed(1)}e${exponent}`;
 }
 
-@Pipe({ name: 'formatScore'})
-export class FormatScorePipe implements PipeTransform {
-  transform(value: Decimal) {
-    if (value.lessThan(1e4)) {
-      return value.toFixed(0);
-    }
-  
-    if (!hasKnownSuffix(value)) {
-      return formatBignumber(value);
-    }
-  
-    let [val, suffix] = shorten(value);
-    return `${val.toFixed(1)} ${suffix}`;
-  }
-}
-
-@Pipe({ name: 'formatOutput'})
-export class FormatOutputPipe implements PipeTransform {
-  transform(value: Decimal) {
-    if (value.lessThan(1e4)) {
-      return value.toFixed(0);
-    }
-  
-    if (!hasKnownSuffix(value)) {
-      return formatBignumber(value);
-    }
-  
-    let [val, suffix] = shorten(value);
-    return `${val.toFixed(1)} ${suffix}`;
-  }
-}
-
 @Pipe({ name: 'formatNumber'})
 export class FormatNumberPipe implements PipeTransform {
   transform(value: Decimal) {
