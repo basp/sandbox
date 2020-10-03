@@ -27,9 +27,6 @@
   <div *ngIf="progress() < 100">
     Next evolutionary algorithm is available at <code>{{target() | formatCost}}</code> energy.
   </div>
-  <div *ngIf="state.level > 0">
-    Current level is <code>{{state.level}}</code> which gives a <code>{{state.level * 0.5}}</code> boost to production.
-  </div>
   <hr/>
   <div class="row align-items-center" *ngFor="let dim of dimensions()">
     <div class="col-sm pt-1" style="font-family: 'Secular One', sans-serif; font-size: 1.1em">
@@ -71,6 +68,21 @@
         class="btn btn-primary btn-block"
         (click)="max()">
         Max
+      </button>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-sm pt-1"></div>
+    <div class="col-sm pt-1"></div>
+    <div class="col-sm pt-1"></div>
+    <div class="col-sm pt-1"></div>
+    <div class="col-sm pt-1">
+      <button 
+        type="button" 
+        class="btn btn-primary btn-block btn-danger"
+        (click)="reset()">
+        Reset
       </button>
     </div>
   </div>

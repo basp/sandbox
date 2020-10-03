@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import Decimal from 'break_infinity.js';
 
+// TODO
+// * achievements
+// * energy anomalies
+// * energy anomaliess upon evolve
+// * energy anomaly gain % boost by achievements
+// * vaporwave
+
 class Dimension {
   public number = new Decimal(0);
   public numberBought = 0;
@@ -10,7 +17,8 @@ class Dimension {
     public name: string,
     public baseCost: Decimal,
     public costMultiplier: Decimal,
-    public baseProduction: Decimal) { }
+    public baseProduction: Decimal,
+    public requiredLevel: number) { }
 
   buy(state: State): void {
     state.energy = state.energy.sub(this.cost());
@@ -61,7 +69,8 @@ class Dimension {
       return true;
     }
 
-    return state.dimensions[this.tier - 1].number.greaterThan(0);
+    return state.dimensions[this.tier - 1].number.greaterThan(0) &&
+      this.requiredLevel <= state.level;
   }
 }
 
@@ -77,49 +86,57 @@ class State {
       'Generator',
       new Decimal(1e1),
       new Decimal(1e3),
-      new Decimal(1)),
+      new Decimal(1),
+      0),
     new Dimension(
       1,
       'Booster',
       new Decimal(1e2),
       new Decimal(1e4),
-      new Decimal(1)),
+      new Decimal(1),
+      1),
     new Dimension(
       2,
       'Hyper Booster',
       new Decimal(1e3),
       new Decimal(1e5),
-      new Decimal(1)),
+      new Decimal(1),
+      1),
     new Dimension(
       3,
       'Enhanced Sensors',
       new Decimal(1e5),
       new Decimal(1e7),
-      new Decimal(1)),
+      new Decimal(1),
+      2),
     new Dimension(
       4,
       '6DoF Stabilizers',
       new Decimal(1e8),
       new Decimal(1e9),
-      new Decimal(1)),
+      new Decimal(1),
+      3),
     new Dimension(
       5,
       'Deep Learning',
       new Decimal(1e13),
       new Decimal(1e12),
-      new Decimal(1)),
+      new Decimal(1),
+      5),
     new Dimension(
       6,
       'Nano Servos',
       new Decimal(1e19),
       new Decimal(1e14),
-      new Decimal(1)),
+      new Decimal(1),
+      8),
     new Dimension(
       7,
       'Gravity Shift',
       new Decimal(1e25),
       new Decimal(1e18),
-      new Decimal(1)),
+      new Decimal(1),
+      13),
   ];
 }
 
@@ -128,8 +145,10 @@ const tickspeed = 1000;
 const rate = 10;
 const interval = 1000 / rate;
 
-const baseTarget = new Decimal(1e40);
-const targetMultiplier = new Decimal(1e6);
+const baseTarget = new Decimal(1e5);
+const targetMultiplier = new Decimal(1e9);
+
+const SAVE_FILE = 'sandbox.save';
 
 @Component({
   selector: 'app-root',
@@ -158,12 +177,16 @@ export class AppComponent {
   }
 
   save(): void {
-    localStorage.setItem('save', JSON.stringify(this.state));
+    localStorage.setItem(SAVE_FILE, JSON.stringify(this.state));
   }
 
   load(): void {
-    let json = localStorage.getItem('save');
-    let save = JSON.parse(json); 
+    let json = localStorage.getItem(SAVE_FILE);
+    if(!json) {
+      return;
+    }
+
+    let save = JSON.parse(json);     
     this.state.energy = new Decimal(save.energy);
     this.state.lastUpdate = save.lastUpdate;
     this.state.level = save.level;
@@ -179,8 +202,17 @@ export class AppComponent {
     this.state = new State();
     this.state.level = level + 1;
     for(let dim of this.state.dimensions) {
+      if (!dim.isVisible(this.state)) {
+        continue;
+      }
+
       dim.baseProduction = new Decimal(1 + this.state.level * 0.5);
     }
+  }
+
+  reset(): void {
+    this.state = new State();
+    localStorage.removeItem(SAVE_FILE);
   }
 
   target(): Decimal {
