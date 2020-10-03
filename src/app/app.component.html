@@ -6,7 +6,16 @@
     <h5 class="text-center">Generating <code>{{state.output | formatNumber }}</code> energy per second.</h5>
     <p *ngIf="warp() > 1" class="text-center">Current warp factor is <code>{{warp() | formatNumber}}</code> time units.</p>
   </div>
-  <hr />
+  <div class="progress mb-2 mt-2" style="height: 20px">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+      role="progressbar" 
+      [style.width]="progress().toFixed(0) + '%'" 
+      [attr.aria-valuenow]="progress()" 
+      aria-valuemin="0" 
+      aria-valuemax="100">
+      {{progress().toFixed(2)}}%
+    </div>
+  </div>
   <div class="row align-items-center" *ngFor="let dim of dimensions()">
     <div class="col-sm pt-1" style="font-family: 'Secular One', sans-serif; font-size: 1.1em">
       {{dim.name}}

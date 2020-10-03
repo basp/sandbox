@@ -126,6 +126,7 @@ const refspeed = 1000;
 const tickspeed = 1000;
 const rate = 10;
 const interval = 1000 / rate;
+const target = new Decimal(1e50);
 
 @Component({
   selector: 'app-root',
@@ -135,6 +136,16 @@ const interval = 1000 / rate;
 export class AppComponent {
   title = 'Sandbox';
   state = new State();
+
+  progress(): number {
+    if (this.state.output.lessThanOrEqualTo(0)) {
+      return 0;
+    }
+
+    let e = this.state.energy.plus(1).log10();
+    let t = target.plus(1).log10();
+    return Math.min(e / t * 100, 100);
+  }
 
   core(): Dimension {
     return this.state.dimensions[0];
