@@ -1,0 +1,53 @@
+<div class="container">
+  <div>
+    <h1 class="text-center">
+      <code>{{state.energy | formatNumber}}</code>
+    </h1>
+    <h5 class="text-center">Generating <code>{{state.output | formatNumber }}</code> energy per second.</h5>
+    <p *ngIf="warp() > 1" class="text-center">Current warp factor is <code>{{warp() | formatNumber}}</code> time units.</p>
+  </div>
+  <hr />
+  <div class="row align-items-center" *ngFor="let dim of dimensions()">
+    <div class="col-sm pt-1" style="font-family: 'Secular One', sans-serif; font-size: 1.1em">
+      {{dim.name}}
+    </div>
+    <div class="col-sm pt-1 text-right">
+      {{dim.number | formatNumber }}
+    </div>
+    <div class="col-sm pt-1 text-right">
+      x{{dim.production() | formatProduction}}
+    </div>
+    <div class="col-sm pt-1">
+      <button type="button" 
+        [disabled]="!dim.isBuyEnabled(state)" 
+        class="btn btn-secondary btn-block"
+        (click)="dim.buy(state)">
+        <span class="badge badge-light">{{dim.purchased()}}</span>
+        {{dim.cost() | formatCost }}
+      </button>
+    </div>
+    <div class="col-sm pt-1">
+      <button type="button" 
+        [disabled]="!dim.isBuyTo10Enabled(state)" 
+        class="btn btn-primary btn-block"
+        (click)="dim.buyTo10(state)">
+        {{dim.costTo10() | formatCost }}
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm pt-1"></div>
+    <div class="col-sm pt-1"></div>
+    <div class="col-sm pt-1"></div>
+    <div class="col-sm pt-1"></div>
+    <div class="col-sm pt-1">
+      <button 
+        type="button" 
+        [disabled]="!isMaxEnabled()" 
+        class="btn btn-primary btn-block"
+        (click)="max()">
+        Max
+      </button>
+    </div>
+  </div>
+</div>
