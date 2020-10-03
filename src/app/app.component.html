@@ -13,7 +13,7 @@
       [attr.aria-valuenow]="progress()" 
       aria-valuemin="0" 
       aria-valuemax="100">
-      {{progress().toFixed(2)}}%
+      {{progress().toFixed(1)}}%
     </div>
   </div>
   <div class="row align-items-center" *ngFor="let dim of dimensions()">
