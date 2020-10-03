@@ -289,18 +289,19 @@ export class AppComponent {
 
     // Now we just need to compensate this with either a higher
     // or lower tickspeed. The `tickspeed` value starts of at 1000
-    // but can be dynamically adjusted. The `refspeed` value never
-    // changes but it should probably be equal to the `tickspeed`
-    // starting value for normal purposes.
+    // but can be dynamically adjusted by whatever the game requires. 
+    // The `refspeed` value never changes but it should be equal 
+    // to the `tickspeed` at the beginning of the game.
 
     // First we convert our scaled unit value `r` into "speed" domain.
     // If we are running exactly on time then `r` should be very close
-    // to 1.0 and to normalize it we want it to be around a 1000.
+    // to 1.0 and to normalize it we want it to be around a `refspeed` 
+    // instead.
     let s = r * refspeed;
 
     // Now we scale `s` with our actual tickspeed. If the tickspeed
     // is lower than a 1000 then time should be progressing faster
-    // scorewise even though we're not actually decreasing `interval`.
+    // scorewise (even though we're still ticking along the same `interval`).
     // If tickspeed is 1000 and we are running on time then this should
     // return back into a scale unit of around 1.0.
     s = s / tickspeed;
