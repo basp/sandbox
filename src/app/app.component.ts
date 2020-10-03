@@ -280,6 +280,11 @@ export class AppComponent {
     // If we are running too fast (usually only happens due to tiny
     // browser scheduling variations) then `r` will be less than 1.0.
     let r = dt / interval;
+
+    // However, if `r` is less than 1.0 we'll clamp it to 1 so we dont
+    // get weird number behavior going between growth and decline.
+    // If we didn't do this your energy gain of 3.2 might suddenly become
+    // 3.17 on the next frame and that is really annoying.
     r = r < 1.0 ? 1.0 : r;
 
     // Now we just need to compensate this with either a higher
