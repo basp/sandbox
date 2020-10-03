@@ -4,6 +4,7 @@ import {
   FormatCostPipe, 
   FormatNumberPipe, 
   FormatProductionPipe,
+  FormatScorePipe,
 } from './pretty-number-pipe'
 import { AppComponent } from './app.component';
 
@@ -13,6 +14,7 @@ import { AppComponent } from './app.component';
     FormatCostPipe,
     FormatNumberPipe,
     FormatProductionPipe,
+    FormatScorePipe
   ],
   imports: [
     BrowserModule

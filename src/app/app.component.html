@@ -1,7 +1,7 @@
 <div class="container mb-3">
   <div>
     <h1 class="text-center">
-      <code>{{state.energy | formatNumber}}</code>
+      <code>{{state.energy | formatScore}}</code>
     </h1>
     <h5 class="text-center">Generating <code>{{state.output | formatNumber }}</code> energy per second.</h5>
     <p *ngIf="warp() > 1" class="text-center">Current warp factor is <code>{{warp() | formatNumber}}</code> time units.</p>
@@ -26,6 +26,9 @@
   </div>
   <div *ngIf="progress() < 100">
     Next evolutionary algorithm is available at <code>{{target() | formatCost}}</code> energy.
+  </div>
+  <div *ngIf="state.level > 0">
+    Current level is <code>{{state.level}}</code> which gives a <code>{{state.level * 0.5}}</code> boost to production.
   </div>
   <hr/>
   <div class="row align-items-center" *ngFor="let dim of dimensions()">
