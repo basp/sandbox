@@ -164,7 +164,6 @@ export class AppComponent {
   load(): void {
     let json = localStorage.getItem('save');
     let save = JSON.parse(json); 
-    console.log(save);
     this.state.energy = new Decimal(save.energy);
     this.state.lastUpdate = save.lastUpdate;
     this.state.level = save.level;
