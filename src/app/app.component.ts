@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import Decimal from 'break_infinity.js';
 
 class Dimension {
@@ -140,6 +140,41 @@ export class AppComponent {
   title = 'Sandbox';
   state = new State();
 
+  constructor() {
+    this.state.lastUpdate = performance.now();
+
+    this.load();
+
+    setInterval(() => {
+      const thisUpdate = performance.now();
+      this.update(thisUpdate - this.state.lastUpdate);
+      this.state.lastUpdate = thisUpdate;
+    }, interval);
+
+    setInterval(() => {
+      this.save();
+      console.log('game saved');
+    }, 30 * 1000);
+  }
+
+  save(): void {
+    localStorage.setItem('save', JSON.stringify(this.state));
+  }
+
+  load(): void {
+    let json = localStorage.getItem('save');
+    let save = JSON.parse(json); 
+    console.log(save);
+    this.state.energy = new Decimal(save.energy);
+    this.state.lastUpdate = save.lastUpdate;
+    this.state.level = save.level;
+    for (let i = 0; i < this.state.dimensions.length; i++) {
+      this.state.dimensions[i].baseProduction = new Decimal(save.dimensions[i].baseProduction);
+      this.state.dimensions[i].number = new Decimal(save.dimensions[i].number);
+      this.state.dimensions[i].numberBought = save.dimensions[i].numberBought;
+    }
+  }
+
   evolve(): void {
     const level = this.state.level;
     this.state = new State();
@@ -196,15 +231,6 @@ export class AppComponent {
     return dims.some(function (x) {
       return x.isBuyTo10Enabled(state);
     });
-  }
-
-  constructor() {
-    this.state.lastUpdate = performance.now();
-    setInterval(() => {
-      const thisUpdate = performance.now();
-      this.update(thisUpdate - this.state.lastUpdate);
-      this.state.lastUpdate = thisUpdate;
-    }, interval);
   }
 
   update(dt: number) {
